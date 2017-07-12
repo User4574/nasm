@@ -24,7 +24,6 @@ section .data
 
 section .bss
   text resb 128
-  tp resb 8
 
 section .text
   global _start
