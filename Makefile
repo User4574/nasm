@@ -1,7 +1,9 @@
+INC=lib.inc
+
 %: %.o
 	ld $< -o $@
 
-%.o: %.s
+%.o: %.s ${INC}
 	nasm -felf64 -g $< -o $@
 
 .SUFFIXES:

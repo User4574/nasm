@@ -11,6 +11,13 @@ SYS_WRITE equ 1
   syscall
 %endmacro
 
+%macro DEBUG 0
+  push rax
+  mov rax, debug
+  call println
+  pop rax
+%endmacro
+
 section .data
   newline db 10
   debug db "Here", 0
@@ -30,7 +37,7 @@ atoi:
   push rcx
   push rbx
 
-  mov rcx, 0 ;rcx will be our count
+  mov rcx, 0 ;rcx will be our result
 
 _atoiloop:
   cmp [rax], byte 0 ;are we at the end?
@@ -45,8 +52,8 @@ _atoiloop:
   pop rax
 
   ;subtract 48 from char, add to rcx
-  mov rbx, [rax]
-  sub rbx, 48
+  mov bl, byte [rax]
+  sub bl, 48
   add rcx, rbx
   inc rax
 
@@ -64,6 +71,10 @@ _atoiend:
 ; input: number in rax
 ; output: string addr in rax
 itoa:
+  push rdx
+  push rcx
+  push rbx
+
   push rax
   mov rbx, 10
   mov rcx, text
@@ -72,22 +83,29 @@ _itoacount:
   cmp rax, 0
   je _itoawrite
 
-  mov rdx, 0
+  cqo
   div rbx
   inc rcx
   jmp _itoacount
 
 _itoawrite:
-  inc rcx
   mov [rcx], byte 0
   pop rax
 _itoawriteloop:
   dec rcx
+  cqo
   div rbx
+  add rdx, 48
   mov [rcx], dl
 
   cmp rcx, text
   jne _itoawriteloop
+
+  mov rax, text
+
+  pop rbx
+  pop rcx
+  pop rdx
   ret
 
 ; println displays a 0t string followed by a newline
