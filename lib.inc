@@ -141,3 +141,21 @@ _printlndisp:
   pop rdi
   pop rax
   ret
+
+gets:
+  push rax
+  push rdi
+  push rsi
+  push rdx
+
+  mov rax, SYS_READ
+  mov rdi, STDIN
+  mov rsi, text
+  mov rdx, 128
+  syscall
+
+  pop rdx
+  pop rsi
+  pop rdi
+  pop rax
+  ret
