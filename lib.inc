@@ -19,7 +19,7 @@ SYS_WRITE equ 1
 %endmacro
 
 section .data
-  newline db 10
+  newline db 10, 0
   debug db "Here", 0
 
 section .bss
@@ -107,9 +107,9 @@ _itoawriteloop:
   pop rdx
   ret
 
-; println displays a 0t string followed by a newline
+; print displays a 0t string
 ; input: text addr in rax
-println:
+print:
   push rax
   push rdi
   push rsi
@@ -117,23 +117,17 @@ println:
   mov rdx, 0
 
   mov rsi, rax
-_printlncount:
+_printcount:
   cmp [rax], byte 0
-  je _printlndisp
+  je _printdisp
 
   inc rax
   inc rdx
-  jmp _printlncount
+  jmp _printcount
 
-_printlndisp:
+_printdisp:
   mov rax, SYS_WRITE
   mov rdi, STDOUT
-  syscall
-
-  mov rax, SYS_WRITE
-  mov rdi, STDOUT
-  mov rsi, newline
-  mov rdx, 1
   syscall
 
   pop rdx
@@ -141,6 +135,20 @@ _printlndisp:
   pop rdi
   pop rax
   ret
+
+; println displays a 0t string followed by a newline
+; input: text addr in rax
+println:
+  push rax
+
+  call print
+
+  mov rax, newline
+  call print
+
+  pop rax
+  ret
+
 
 gets:
   push rax
