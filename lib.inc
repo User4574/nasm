@@ -28,7 +28,9 @@ section .bss
 section .text
   global _start
 
-; atoi turns a 0t string into a number
+; atoi turns a string into a number
+; expects decimal
+; stops when a char is not an ascii digit
 ; input: string addr in rax
 ; output: number in rax
 atoi:
@@ -39,8 +41,12 @@ atoi:
   mov rcx, 0 ;rcx will be our result
 
 _atoiloop:
-  cmp [rax], byte 0 ;are we at the end?
-  je _atoiend
+  ;are we at the end?
+  cmp [rax], byte 48
+  jl _atoiend
+
+  cmp [rax], byte 57
+  jg _atoiend
 
   ;multiply result by 10
   push rax
