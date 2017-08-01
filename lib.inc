@@ -110,6 +110,7 @@ _itoawriteloop:
 ; print displays a 0t string
 ; input: text addr in rax
 print:
+  push rcx
   push rax
   push rdi
   push rsi
@@ -134,6 +135,7 @@ _printdisp:
   pop rsi
   pop rdi
   pop rax
+  pop rcx
   ret
 
 ; println displays a 0t string followed by a newline
@@ -151,7 +153,7 @@ println:
 
 
 gets:
-  push rax
+  push rcx
   push rdi
   push rsi
   push rdx
@@ -165,5 +167,6 @@ gets:
   pop rdx
   pop rsi
   pop rdi
-  pop rax
+  pop rcx
+  mov rax, text
   ret
